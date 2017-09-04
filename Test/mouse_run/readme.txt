@@ -1,33 +1,33 @@
-ƒvƒƒOƒ‰ƒ€‚ðƒ_ƒEƒ“ƒ[ƒh‚µ‚½‚çAmake‚µ‚ÄŽÀs‚µ‚Ä‚­‚¾‚³‚¢B
+ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ€ã‚¦ãƒ³ãƒ­ãƒ¼ãƒ‰ã—ãŸã‚‰ã€makeã—ã¦å®Ÿè¡Œã—ã¦ãã ã•ã„ã€‚
 
-ŽÀsƒtƒ@ƒCƒ‹iMouseRunj‚ðŽÀs‚·‚é‚ÆA—¼—Ö‚ª1000Hz‚Å‰ñ“]‚µ‚Ü‚·B
-ŽÔ‘Ì‘O–Ê‚Ì4‚Â‚ÌƒZƒ“ƒT[‘S‚Ä‚ªáŠQ•¨‚ðŒŸ’m‚µ‚½ê‡A‰ñ“]‚ð’âŽ~‚µ‚Ü‚·B
-áŠQ•¨‚ªœ‹Ž‚³‚ê‚é‚ÆAÄ‚Ñ‰ñ“]‚µ‚Ü‚·B
+å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆMouseRunï¼‰ã‚’å®Ÿè¡Œã™ã‚‹ã¨ã€ä¸¡è¼ªãŒ1000Hzã§å›žè»¢ã—ã¾ã™ã€‚
+è»Šä½“å‰é¢ã®4ã¤ã®ã‚»ãƒ³ã‚µãƒ¼å…¨ã¦ãŒéšœå®³ç‰©ã‚’æ¤œçŸ¥ã—ãŸå ´åˆã€å›žè»¢ã‚’åœæ­¢ã—ã¾ã™ã€‚
+éšœå®³ç‰©ãŒé™¤åŽ»ã•ã‚Œã‚‹ã¨ã€å†ã³å›žè»¢ã—ã¾ã™ã€‚
 
-is•ûŒü‘¤‚Ìƒ^ƒNƒgƒXƒCƒbƒ`‚ð‰Ÿ‚·‚±‚Æ‚ÅAƒvƒƒOƒ‰ƒ€I—¹‚µ‚Ü‚·B
+é€²è¡Œæ–¹å‘å´ã®ã‚¿ã‚¯ãƒˆã‚¹ã‚¤ãƒƒãƒã‚’æŠ¼ã™ã“ã¨ã§ã€ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†ã—ã¾ã™ã€‚
 
 
 
-ƒtƒ@ƒCƒ‹\‘¢F
+ãƒ•ã‚¡ã‚¤ãƒ«æ§‹é€ ï¼š
 
 /home/pi/mouse_run
 
 mouse_run 
-b@
-„¥„ŸMakefile
-b@
-„¥„Ÿbuild
-b
-„¥„Ÿinclude
-b@b
-b@„¤„Ÿmouse.h
-b
-„¤„Ÿsrc
-@@b
-@@„¥„Ÿmain.cpp
-@@b
-@@„¥„Ÿmotor.cpp
-@@b
-@@„¥„Ÿsensor.cpp
-@@b
-@@„¤„Ÿtact_switch.cpp
+ï½œã€€
+â”œâ”€Makefile
+ï½œã€€
+â”œâ”€build
+ï½œ
+â”œâ”€include
+ï½œã€€ï½œ
+ï½œã€€â””â”€mouse.h
+ï½œ
+â””â”€src
+ã€€ã€€ï½œ
+ã€€ã€€â”œâ”€main.cpp
+ã€€ã€€ï½œ
+ã€€ã€€â”œâ”€motor.cpp
+ã€€ã€€ï½œ
+ã€€ã€€â”œâ”€sensor.cpp
+ã€€ã€€ï½œ
+ã€€ã€€â””â”€tact_switch.cpp
