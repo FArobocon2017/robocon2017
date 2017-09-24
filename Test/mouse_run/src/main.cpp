@@ -9,24 +9,10 @@ int main(void)
 	Mouse	m1;
 	int	tsw_sts[4]={0};
 	int	sen_sts[4]={0};
-	Move move;
 
 	m1.motor_sw_on();	
 	while(1)
 	{
-		move.kasoku(4000);
-		
-		センサー出しまくる
-		
-		壁なくなる
-		
-		足立法ロジック
-		
-		
-		旋回
-		
-		
-		
 		m1.get_sensor_sts(sen_sts);
 		if(sen_sts[0] > 100 && sen_sts[1] > 100 && sen_sts[2] > 100 && sen_sts[3] > 100){
 			m1.ctr_motor_stop();
