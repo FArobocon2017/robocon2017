@@ -8,12 +8,12 @@
 
 
 
-##ファイル構造
+## ファイル構造
 
 /home/pi/mouse_run
 
 mouse_run 
-｜　
+|
 ├─Makefile
 ｜　
 ├─build
