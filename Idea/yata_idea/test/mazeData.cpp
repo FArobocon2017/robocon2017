@@ -1,216 +1,223 @@
-#include "Maze.h"
+#include <cstdio>
+#include <queue>
 
-extern const char mazeData_maze2011exp[16+1][16+1] = {
-		{"9555551155511113"},
-		{"839157a8393eeaaa"},
-		{"aaac53828681502a"},
-		{"aac17aa8696816aa"},
-		{"a87ad2c45692a96a"},
-		{"c07c3e95512a8696"},
-		{"d055694552c02d2f"},
-		{"d07938393e92ed43"},
-		{"d07aaaa8692e9392"},
-		{"bc3aac0692e92c6a"},
-		{"ad4283c56e92ed52"},
-		{"a97c2abb93aa9152"},
-		{"a8792c2aac682ed2"},
-		{"8696ab86ab96c3d2"},
-		{"8147aaa96ac39416"},
-		{"ec55444454544547"},
-};
+#include "MazeData.h"
 
-extern const char mazeData_maze2011fr[16+1][16+1] = {
-		{"9555155511515153"},
-		{"abd3a953aabafc3a"},
-		{"aad6aabaaae853aa"},
-		{"c453aaaaac7c7ac2"},
-		{"fd3aaaaa8579783a"},
-		{"fd6aaaeaa9503a82"},
-		{"d516c696eabaaaaa"},
-		{"9529556912aa82aa"},
-		{"c528153c6aaaaaaa"},
-		{"9542ab813aeaaaaa"},
-		{"e952aaaaac52eaaa"},
-		{"fc52aaaa857c546a"},
-		{"9516aaaaa9517bba"},
-		{"ababac4282b85682"},
-		{"aac2a956aaeaf96a"},
-};
+const uint8_t NORTH = 0x01;
+const uint8_t EAST = 0x02;
+const uint8_t SOUTH = 0x04;
+const uint8_t WEST = 0x08;
+const uint8_t DONE_NORTH = 0x10;
+const uint8_t DONE_EAST = 0x20;
+const uint8_t DONE_SOUTH = 0x40;
+const uint8_t DONE_WEST = 0x80;
 
-extern const char mazeData_maze2012exp[16+1][16+1] = {
-		{"9395551555539393"},
-		{"aaa939695556aaaa"},
-		{"ac6a847c5553ac6a"},
-		{"8556a9555552c53a"},
-		{"a9516a915396952a"},
-		{"8696baa83ac3a96a"},
-		{"a9452a82ea96843a"},
-		{"86952aa83aa9416a"},
-		{"8143aaa86a86947a"},
-		{"ac3c2aa83c6947ba"},
-		{"c545282aa952d12a"},
-		{"95552aa8285696aa"},
-		{"c53d2c42c293a96a"},
-		{"9383853c56aaa856"},
-		{"aaaaad45556c6c53"},
-		{"ec6c455555555556"},
-};
+const IndexVec IndexVec::vecNorth(0,1);
+const IndexVec IndexVec::vecEast(1,0);
+const IndexVec IndexVec::vecSouth(0,-1);
+const IndexVec IndexVec::vecWest(-1,0);
+const IndexVec IndexVec::vecDir[4] = {IndexVec::vecNorth, IndexVec::vecEast, IndexVec::vecSouth, IndexVec::vecWest};
 
-extern const char mazeData_maze2013exp[16+1][16+1] = {
-		{"9795555555551393"},
-		{"856915555553eaaa"},
-		{"8796a95153d43c6a"},
-		{"ad056ad07a93853a"},
-		{"ad0796d07c6aad2a"},
-		{"a943c3d0793ac3aa"},
-		{"a8543ad056ac3aaa"},
-		{"ac53ac38396baaaa"},
-		{"a956a96c6c3c2aaa"},
-		{"ac53c43939696aaa"},
-		{"a95693c6c6bad2aa"},
-		{"a8556a9153c296aa"},
-		{"a8393c6c5296abaa"},
-		{"aac681793c43a86a"},
-		{"aabbec56c5546ad2"},
-		{"ec44555555555456"},
-};
+void Maze::clear()
+{
+	for (int i=0;i<MAZE_SIZE;i++) {
+		for (int j=0;j<MAZE_SIZE;j++) {
+			wall[i][j] = 0;
+		}
+	}
+	for (int i=0;i<MAZE_SIZE;i++) {
+		wall[MAZE_SIZE-1][i] |= NORTH | DONE_NORTH;
+		wall[i][MAZE_SIZE-1] |= EAST | DONE_EAST;
+		wall[0][i] |= SOUTH | DONE_SOUTH;
+		wall[i][0] |= WEST | DONE_WEST;
+	}
 
-extern const char mazeData_maze2013fr[16+1][16+1] = {
-		{"9115151553ff9113"},
-		{"aaafafaf94556aaa"},
-		{"a8696fafa95556aa"},
-		{"82fad543aa95556a"},
-		{"aa92fffac6c55392"},
-		{"a8681516f95556aa"},
-		{"c2faafa954553faa"},
-		{"f816afa83953afaa"},
-		{"fac3856c6afaafaa"},
-		{"92fac5553c3ac56a"},
-		{"ac54539543ac5552"},
-		{"affffaa93aaf9552"},
-		{"8515542aac696952"},
-		{"af851546c3fafafa"},
-		{"afafaf9552fafafa"},
-		{"efc5456ffc545456"},
-};
+	dirty = true;
+}
 
-extern const char mazeData_maze2013taiwan[16+1][16+1] = {
-		{"93b9113b93b93b93"},
-		{"a802aa82a82aa82a"},
-		{"aeec446c6ec6c6ea"},
-		{"8515179539113916"},
-		{"850569696aaa8687"},
-		{"c14796947c282943"},
-		{"9479696d5506a852"},
-		{"879696b915456c16"},
-		{"a969692c6b913d07"},
-		{"869696ad146ec547"},
-		{"e969696d43939393"},
-		{"969696953c6c6c6a"},
-		{"c56969696953d13a"},
-		{"b9569696969696aa"},
-		{"829169696969696a"},
-};
+bool Maze::loadFromFile(const char *_filename)
+{
+	dirty = true;
 
-extern const char mazeData_maze2[16+1][16+1] = {
-		{"9551553ff9551553"},
-		{"af92ffc556ffaffa"},
-		{"a96aff939553affa"},
-		{"8452ffaaa9568552"},
-		{"affc53aaaa95693a"},
-		{"effff86c6c2ffaaa"},
-		{"9395569553c15286"},
-		{"aaafff813ad43aaf"},
-		{"aaafffac68556aaf"},
-		{"a84153c556d556c3"},
-		{"ae96fabff93ffffa"},
-		{"a96d7aaffac53ffa"},
-		{"869556affaff8552"},
-		{"abafffc556ffaffa"},
-		{"aaad515153ffaffa"},
-		{"eec55456fc554556"},
-};
+	FILE *inputFile;
+	inputFile = std::fopen(_filename, "r");
+	if (inputFile == NULL) {
+		std::printf("ERROR : Failed open wall data file\n");
+		return false;
+	}
 
-extern const char mazeData_maze3[16+1][16+1] = {
-		{"d5553fffffffffff"},
-		{"d5116fff93ffffff"},
-		{"ffe815556affffff"},
-		{"fffeaf93fa93ffff"},
-		{"ff95052afaaaffff"},
-		{"ffc52baa96aaffff"},
-		{"ff956c6c056c5553"},
-		{"9507fff92ffffffa"},
-		{"a96f955443fffffa"},
-		{"aafbaffff8553ffa"},
-		{"aef86ffffaffc156"},
-		{"c53afffffafffaff"},
-		{"b96a955552fffaff"},
-		{"86beefbffafffaff"},
-		{"8545156ffc5556fb"},
-		{"efffeffffffffffe"},
-};
+	for (int i=0;i<3;i++) {
+		int dummy;
+		if (std::fscanf(inputFile, "%d", &dummy) == EOF) {
+			std::printf("ERROR : Failed read wall data\n");
+			std::fclose(inputFile);
+			return false;
+		}
+	}
 
-extern const char mazeData_maze4[16+1][16+1] = {
-		{"d51157f9515557d3"},
-		{"97ac5552fc55153a"},
-		{"afaff97ad153afaa"},
-		{"c5413c52fad6c3c2"},
-		{"fbfaabbc56f956fa"},
-		{"d452ac053ffaf956"},
-		{"d13aad6f8156d453"},
-		{"faac2d392c39517a"},
-		{"fc43afac47aefafa"},
-		{"93bc43af9383fa96"},
-		{"aac552c56c6a946b"},
-		{"ac553c5555568552"},
-		{"afffabffb9556fba"},
-		{"affd04154695512a"},
-		{"83938501552ffeea"},
-		{"ec6c6feeffc55556"},
-};
+	size_t cnt = 0;
+	char ch;
+	while (std::fscanf(inputFile, "%c", &ch) != EOF) {
+		if ( ('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f')) {
+			uint8_t wall_bin;
+			if ('0' <= ch && ch <= '9') wall_bin = ch - '0';
+			else wall_bin = ch - 'a' + 10;
 
-extern const char mazeData_maze5[16+1][16+1] = {
-		{"f93f953bfd397d53"},
-		{"d46b852ed146fbbe"},
-		{"f93c4507babbd02b"},
-		{"feef97ed6a807e86"},
-		{"d17be97d546c3d6f"},
-		{"febc383b9117c57f"},
-		{"d52d2eea86c7fd13"},
-		{"ffe941502d57d506"},
-		{"d796fc3c2bd15107"},
-		{"f92b97c52ed47ec7"},
-		{"d2c4417d693fbbff"},
-		{"d4517ad392c7eabb"},
-		{"fbbc1456c6ff9406"},
-		{"9443ad13d795456f"},
-		{"af942faa914553bf"},
-		{"efed6feeec55546f"},
-};
+			size_t y = MAZE_SIZE -1 -cnt/MAZE_SIZE;
+			size_t x = cnt%MAZE_SIZE;
+			wall[y][x].byte = wall_bin | 0xf0;
+			cnt++;
+		}
+	}
+	std::fclose(inputFile);
 
-extern const char mazeData_maze[16+1][16+1] = {
-		{"9551553ff9551553"},
-		{"af92ffc556ffaffa"},
-		{"a96aff939553affa"},
-		{"8452ffaaa9568552"},
-		{"affc53aaaa95693a"},
-		{"effff86c6c2ffaaa"},
-		{"9395569553c15286"},
-		{"aaafff813ad43aaf"},
-		{"aaefffac68556aaf"},
-		{"a85153c556d556c3"},
-		{"ae96fabff93ffffa"},
-		{"a96d7aaffac53ffa"},
-		{"869556affaff8552"},
-		{"abafffc556ffaffa"},
-		{"aaad515153ffaffa"},
-		{"eec55456fc554556"},
-};
+	return true;
+}
 
-extern const char mazeData_66test[5+1][5+1] = {
-		{"91513"},
-		{"aad6a"},
-		{"aad3a"},
-		{"aafaa"},
-		{"ec546"}
-};
+
+void Maze::loadFromArray(const char asciiData[MAZE_SIZE+1][MAZE_SIZE+1])
+{
+	dirty = true;
+
+	for (int i=0;i<MAZE_SIZE;i++) {
+		for (int j=0;j<MAZE_SIZE;j++) {
+			char ch = asciiData[MAZE_SIZE-1-i][j];
+			if ( ('0' <= ch && ch <= '9') || ('a' <= ch && ch <= 'f')) {
+				uint8_t wall_bin;
+				if ('0' <= ch && ch <= '9') wall_bin = ch - '0';
+				else wall_bin = ch - 'a' + 10;
+
+				wall[i][j].byte = wall_bin | 0xf0;
+			}
+		}
+	}
+}
+
+void Maze::printWall(const uint8_t value[MAZE_SIZE][MAZE_SIZE]) const
+{
+	bool printValueOn = false;
+	if (value) printValueOn = true;
+
+	for (int y=MAZE_SIZE-1;y>=0;y--) {
+		for (int x=0;x<MAZE_SIZE;x++) {
+			std::printf("+");
+			if(wall[y][x].bits.North) std::printf("----");
+			else std::printf("    ");
+		}
+		std::printf("+\n");
+
+		for (int x=0;x<MAZE_SIZE;x++) {
+			if (wall[y][x].bits.West) std::printf("|");
+			else std::printf(" ");
+			std::printf(" ");
+			if (printValueOn) std::printf("%3u", value[y][x]);
+			else std::printf("   ");
+		}
+		std::printf("|\n");
+	}
+	for (int i=0;i<MAZE_SIZE;i++) {
+		std::printf("-----");
+	}
+	std::printf("+\n");
+}
+
+
+
+void Maze::printWall(const bool value[MAZE_SIZE][MAZE_SIZE]) const
+{
+	bool printValueOn = false;
+	if (value) printValueOn = true;
+
+	for (int y=MAZE_SIZE-1;y>=0;y--) {
+		for (int x=0;x<MAZE_SIZE;x++) {
+			std::printf("+");
+			if(wall[y][x].bits.North) std::printf("----");
+			else std::printf("    ");
+		}
+		std::printf("+\n");
+
+		for (int x=0;x<MAZE_SIZE;x++) {
+			if (wall[y][x].bits.West) std::printf("|");
+			else std::printf(" ");
+			std::printf("  ");
+			if (printValueOn){
+				if (value[y][x]) std::printf("* ");
+				else std::printf("  ");
+			}
+			else std::printf("   ");
+		}
+		std::printf("|\n");
+	}
+	for (int i=0;i<MAZE_SIZE;i++) {
+		std::printf("-----");
+	}
+	std::printf("+\n");
+}
+
+void Maze::printStepMap() const
+{
+	printWall(stepMap);
+}
+
+void Maze::updateWall(const IndexVec &cur, const Direction& newState, bool forceSetDone)
+{
+	//二重書き込みを防ぐ
+	if (!forceSetDone && wall[cur.y][cur.x].isDoneAll()) return;
+
+	dirty = true;
+	if (forceSetDone) wall[cur.y][cur.x] |= newState | (uint8_t)0xf0;
+	else wall[cur.y][cur.x] |= newState;
+
+	//今のEASTをx+1のWESTに反映
+	//今のNORTHをy+1のSOUTHに反映
+	//今のWESTをx-1のEASTに反映
+	//今のSOUTHをy-1のNORTHに反映
+	for (int i=0;i<4;i++) {
+		if (cur.canSum(IndexVec::vecDir[i])) {
+			IndexVec neighbor(cur + IndexVec::vecDir[i]);
+			//今のi番目の壁情報ビットとDoneビットを(i+2)%4番目(180度回転方向)に反映
+			if (forceSetDone) wall[neighbor.y][neighbor.x] |= (0x10 | newState[i]) << (i+2)%4;
+			else wall[neighbor.y][neighbor.x] |= ((newState[i+4]<<4) | newState[i]) << (i+2)%4;
+		}
+	}
+}
+
+void Maze::updateStepMap(const IndexVec &dist, bool onlyUseFoundWall)
+{
+	if (!dirty && dist == lastStepMapDist && onlyUseFoundWall == lastOnlyUseFoundWall) return;
+	lastStepMapDist = dist;
+	lastOnlyUseFoundWall = onlyUseFoundWall;
+	dirty = false;
+
+	for(size_t i=0;i<MAZE_SIZE;i++) {
+		for(size_t j=0;j<MAZE_SIZE;j++) {
+			stepMap[i][j] = 0xff;
+		}
+	}
+	stepMap[dist.y][dist.x] = 0;
+
+	std::queue<IndexVec> q;
+	q.push(dist);
+
+	while (!q.empty()) {
+		const IndexVec cur = q.front();
+		q.pop();
+
+		Direction cur_wall = wall[cur.y][cur.x];
+		for (int i=0;i<4;i++) {
+			const IndexVec scanIndex = cur + IndexVec::vecDir[i];
+			const uint8_t curStep = stepMap[cur.y][cur.x];
+			if (!cur_wall[i] && stepMap[scanIndex.y][scanIndex.x] > curStep +1) {
+				//未探索壁をどうするか
+				if (onlyUseFoundWall && !cur_wall[i+4]) continue;
+
+				stepMap[scanIndex.y][scanIndex.x] = curStep +1;
+
+				//袋小路でない場合はqueueに入れる
+				if (wall[scanIndex.y][scanIndex.x].nWall() != 3) {
+					q.push(scanIndex);
+				}
+			}
+		}
+	}
+}

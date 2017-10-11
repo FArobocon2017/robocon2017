@@ -1,9 +1,8 @@
-#ifndef OPERATION_H_
-#define OPERATION_H_
+#pragma once
 
 #include <vector>
 #include <cstddef>
-#include "Maze.h"
+#include "MazeData.h"
 #include "MazeSolver_conf.h"
 
 
@@ -72,6 +71,3 @@ public:
 
 	void print();
 };
-
-
-#endif /* OPERATION_H_ */

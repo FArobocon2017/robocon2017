@@ -1,10 +1,9 @@
-#ifndef AGENT_H_
-#define AGENT_H_
+#pragma once
 
 #include <list>
 #include <vector>
 
-#include "Maze.h"
+#include "MazeData.h"
 #include "ShortestPath.h"
 #include "Operation.h"
 
@@ -96,7 +95,3 @@ public:
 	//再開したいAgentと迷路の状態を渡す
 	void resumeAt(State resumeState, Maze &_maze);
 };
-
-
-
-#endif /* AGENT_H_ */

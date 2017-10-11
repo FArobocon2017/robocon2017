@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Maze.h"
+#include "MazeData.h"
 #include "Agent.h"
-#include "mazeData.h"
+#include "mazeSimData.h"
 #include "MazeRunner.h"
 #include <vector>
 
@@ -16,9 +16,9 @@ class MazeSolver
 	//’Tõ‚Ìw¦‚ğo‚·
 	Agent agent(maze);
 	//‘O‰ñ‚ÌAgent‚Ìó‘Ô‚ğ•Û‘¶‚µ‚Æ‚­
-	Agent::State prevState = IDLE;
+	Agent::State prevState = Agent::IDLE;
 
 public:
 	MazeSolver();
-	SolverOutputParam update(Position, RunMode);
+	MazeProgress update(Position, RunMode);
 };

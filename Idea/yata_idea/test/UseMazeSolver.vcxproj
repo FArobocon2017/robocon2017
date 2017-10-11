@@ -112,8 +112,8 @@
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Maze.cpp" />
-    <ClCompile Include="mazeData.cpp" />
+    <ClCompile Include="MazeData.cpp" />
+    <ClCompile Include="mazeSimData.cpp" />
     <ClCompile Include="MazeRunner.cpp" />
     <ClCompile Include="MazeSolver.cpp" />
     <ClCompile Include="Operation.cpp" />
@@ -121,8 +121,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Agent.h" />
-    <ClInclude Include="Maze.h" />
-    <ClInclude Include="mazeData.h" />
+    <ClInclude Include="MazeData.h" />
+    <ClInclude Include="mazeSimData.h" />
     <ClInclude Include="MazeRunner.h" />
     <ClInclude Include="MazeSolver.h" />
     <ClInclude Include="MazeSolver_conf.h" />

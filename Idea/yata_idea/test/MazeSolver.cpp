@@ -1,4 +1,5 @@
 #include "MazeSolver.h"
+#include "MazeData.h"
 
 MazeSolver::MazeSolver()
 {}
@@ -18,7 +19,7 @@ MazeSolver::calcNextPosForLearning(const Position myPos)
 	return param;
 }
 
-MazeOutputParam MazeSolver::update(const Position myPos, RunMode mode)
+MazeProgress MazeSolver::update(const Position myPos, RunMode mode)
 {
 
 	// RunMode = íTçıëñçsÉÇÅ[Éh

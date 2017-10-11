@@ -1,10 +1,9 @@
-#ifndef SHORTESTPATH_H_
-#define SHORTESTPATH_H_
+#pragma once
 
 #include <list>
 #include <vector>
 
-#include "Maze.h"
+#include "MazeData.h"
 #include "Operation.h"
 
 typedef std::vector<IndexVec> Path;
@@ -77,6 +76,3 @@ public:
 	void calcNeedToSearchWallIndex();
 	inline const std::list<IndexVec> &getNeedToSearchIndex() const { return needToSearchWallIndex; }
 };
-
-
-#endif /* SHORTESTPATH_H_ */

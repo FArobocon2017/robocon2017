@@ -1,0 +1,29 @@
+・main.cpp
+	役割：
+		メインルーチン
+	処理：
+		MazeRunner::runAll()呼びだし
+
+・MazeRunner.cpp
+	役割：
+		走行タスク
+	処理：
+		MazeRunner::runMicroMouseDriver()呼びだし
+		m_pMazeSolver->updatePosition(motorOutput)
+		motorInput = m_pMazeSolver->calcNextPosition(progress.currentPos, m_Mode);
+		motorOutput = m_pMicroMouseDriver->drive(motorInput);
+
+・MazeSolver.cpp
+	役割：
+		Solver2015のデータ構造変換
+		ソルバ実行
+	処理：
+		Solver2015のmain参考に
+
+MazeRunner
+→　Runモード
+	→　次進むマスの方向
+	→　ゴール
+		→　最短経路探索モード
+→　Runモード以外
+	→　タスク終了

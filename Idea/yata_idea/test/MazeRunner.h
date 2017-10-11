@@ -1,6 +1,7 @@
 #pragma once
+
 #include <memory>
-#include "Maze.h"
+#include "MazeData.h"
 
 
 class MazeSolver;

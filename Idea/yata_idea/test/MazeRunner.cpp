@@ -12,7 +12,7 @@ void MazeRunner::runMicroMouseDriver()
 {
 	while (m_Status == Run) // ’âŽ~Žw—ß‚Ü‚½‚ÍƒS[ƒ‹“ž’…‚Ü‚Å“®‚«‘±‚¯‚é
 	{
-		auto progress = m_pMazeSolver->update( );
+		auto progress = m_pMazeSolver->update(m_Position, m_RunMode);
 
 		if (progress.isGoal)
 		{
