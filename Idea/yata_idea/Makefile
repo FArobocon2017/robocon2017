@@ -1,45 +1,28 @@
-# コンパイラ
 CC			= g++
-# コンパイラオプション
 CFLAGS		= -std=c++14 -stdlib=libc++ -O2 -MMD -MP -Wall -Wextra -Winit-self 
-# リンクオプション
 ifeq "$(shell getconf LONG_BIT)" "64"
   LDFLAGS	= -mpthread
 else
   LDFLAGS	= -mpthread
 endif
-# 静的リンクするライブラリ
 LIBS		=
-# 生成されるバイナリファイルの出力ディレクトリ
 TGT_DIR		= ./bin
-# 生成される実行ファイル
 TARGET		= Fa3GMazeRunner.out
-# インクルードパスの指定
 INCLUDE		= -I ./include
-# ソースコードのルートディレクトリ
 SRC_ROOT	= ./src
-# 中間バイナリファイルの出力ルートディレクトリ
 OBJ_ROOT	= ./obj
 
-# ソースディレクトリをfindで探索後、サブディレクトリまでリスト化
 SRC_DIR		:= $(shell find $(SRC_ROOT) -type d)
-# ソースディレクトリを元にforeachで全cppファイルをリスト化
 SOURCES   = $(foreach dir, $(SRC_DIR), $(wildcard $(dir)/*.cpp))
-# 上記のcppファイルのリストを元にオブジェクトファイル名を決定
 OBJECTS   = $(addprefix $(OBJ_ROOT)/, $(SOURCES:.cpp=.o)) 
-# ソースディレクトリと同じ構造で中間バイナリファイルの出力ディレクトリをリスト化
 OBJ_DIR   = $(addprefix $(OBJ_ROOT)/, $(SRC_DIR)) 
-# 依存ファイル.dを.oファイルから作る
 DEPENDS   = $(OBJECTS:.o=.d)
 
-# 依存ファイルを元に実行ファイルを作る
 $(TARGET): $(OBJECTS) $(LIBS)
 	$(CC) -o $(TGT_DIR)/$@ $^ $(LDFLAGS)
 
-# 中間バイナリのディレクトリを掘りながら.cppを中間ファイル.oに
 $(OBJ_ROOT)/%.o: $(SRC_ROOT)/%.cpp
 	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	$(CC) $(CFLAGS) $(INCLUDE) -o $@ -c $<
 
-# 依存関係ファイル
 -include $(DEPENDS)
